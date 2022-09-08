@@ -5,20 +5,25 @@ import {
   Flex,
   Heading,
   HStack,
-  Icon,
   Image,
-  Link,
   Stack,
   Text,
-  useBoolean,
   useColorModeValue,
   useDisclosure,
+  Box,
+  Tag,
+  TagLabel,
+  TagRightIcon,
 } from "@chakra-ui/react";
 import { FaBed, FaBath, FaBorderAll } from "react-icons/fa";
-import React, { Component, ReactDOM, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import router from "next/router";
-import { supabase } from "../../utils/supabaseClient";
+import axios from "axios";
+import { IoLocationSharp } from "react-icons/io5";
 
+const api = axios.create({
+  baseURL: `http://localhost:5001/api/post`,
+});
 export default function ProRentCard({
   amount,
   location,
@@ -28,44 +33,37 @@ export default function ProRentCard({
   bath,
   area,
   image,
-  post_id,
+  id,
   phone,
   children,
+  email,
 }) {
   var isBooked: boolean;
   const [bookId, setId] = useState("");
-  const [review, setReview] = useState("");
+  const [Uname, setName] = useState("");
+  const [Uemail, setEmail] = useState("");
+  const [Uphone, setPhone] = useState("");
+  const [Ulocation, setLocation] = useState("");
+  const [Uaddress, setAddress] = useState("");
+  const [Uprice, setPrice] = useState("");
+  const [Uarea, setArea] = useState("");
+  const [Ubeds, setBeds] = useState("");
+  const [Ubaths, setBaths] = useState("");
+  const [Udescription, setDescription] = useState("");
+  const [Utype, setType] = useState("");
+  const [Ucstatus, setCstatus] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    getReview();
-  });
+    bookInfo();
+  }, []);
 
   const PostDelete = async (post_id: any) => {
-    const { data, error } = await supabase
-      .from("posts")
-      .delete()
-      .eq("post_id", post_id);
+    let data = await api.delete(`/${post_id}`);
   };
 
-  const getReview = async () => {
-    const { data, error } = await supabase
-      .from("posts")
-      .select("review")
-      .eq("post_id", post_id)
-      .single();
-    if (error) throw error;
-
-    if (data) {
-      setReview(data.review);
-      console.log(review);
-    }
-  };
-  const Approve = async () => {
-    const { data, error } = await supabase
-      .from("posts")
-      .update([{ review: 'true' }])
-      .eq("post_id", post_id);
-    if (error) throw error;
+  const bookInfo = async () => {
+    console.log(Uname);
   };
   return (
     <Center>
@@ -78,153 +76,125 @@ export default function ProRentCard({
         boxShadow={"lg"}
         padding={4}
       >
-        <Center
-          py={6}
-          as={"button"}
-          onClick={() => {
-            router.push({
-              pathname: "/components/rentDetails",
-              query: post_id,
-            });
-          }}
-        >
-          <Stack
+        <Center py={6}>
+          <Box
             borderWidth="1px"
             borderRadius="lg"
             w={"100%"}
-            height={"35vh"}
-            direction={{ base: "column", md: "row" }}
+            height={"100%"}
             bg={useColorModeValue("white", "gray.900")}
             boxShadow={"lg"}
             padding={4}
+            as={"button"}
+            onClick={() => {
+              router.push({
+                pathname: "/components/ProCardDetails",
+                query: id,
+              });
+            }}
           >
-            <Flex flex={1} bg="blue.200" borderRadius={"lg"}>
+            <Stack direction={{ base: "column", md: "row" }}>
               <Image
                 objectFit="cover"
-                boxSize="100%"
+                maxH={"30%"}
+                maxW={"50%"}
                 borderRadius={"lg"}
                 src={image}
               />
-            </Flex>
-            <Stack
-              flex={1}
-              flexDirection="column"
-              justifyContent="start"
-              alignItems="start"
-              p={1}
-              pl={10}
-            >
-              <Stack direction="row" alignItems="baseline">
-                <Text
-                  fontSize="18"
-                  fontWeight="bold"
-                  textAlign={"match-parent"}
-                >
-                  BDT
-                </Text>
-                <Text fontSize="40" fontWeight="bold">
-                  {amount}
-                </Text>
-              </Stack>
-              <Text>{location}</Text>
-              <Badge>{type}</Badge>
-              <Heading
-                fontSize={20}
-                overflow={"hidden"}
-                orientation={"horizontal"}
-                noOfLines={1}
-              >
-                {title}
-              </Heading>
-              <HStack spacing={7} pt={3} alignItems={"baseline"}>
-                <HStack>
-                  <FaBed size={20} />
-                  <Text>{bed}</Text>
-                </HStack>
-                <HStack>
-                  <FaBath size={20} />
-                  <Text>{bath}</Text>
-                </HStack>
-                <HStack>
-                  <FaBorderAll size={20} />
-                  <Text>{area}</Text>
-                </HStack>
-              </HStack>
-              <Flex
-                justifyContent={"flex-end"}
-                flexDirection={"column"}
+              <Stack
                 flex={1}
+                flexDirection="column"
+                justifyContent="start"
+                alignItems="start"
+                p={1}
+                pl={10}
               >
-                <HStack py={4} justifyContent={"start"}>
-                  {children}
+                <Stack direction="row" alignItems="baseline">
+                  <Text
+                    fontSize="md"
+                    fontWeight="bold"
+                    textAlign={"match-parent"}
+                  >
+                    BDT
+                  </Text>
+                  <Text fontSize="4xl" fontWeight="bold">
+                    {amount}
+                  </Text>
+                </Stack>
+                <Tag size={"lg"} variant="outline" colorScheme="blue">
+                  <TagLabel>{location}</TagLabel>
+                  <TagRightIcon boxSize="12px" as={IoLocationSharp} />
+                </Tag>
+                <Badge fontSize="sm" colorScheme="blue" variant={"solid"}>
+                  {type}
+                </Badge>
+                <Heading
+                  fontSize={20}
+                  overflow={"hidden"}
+                  orientation={"horizontal"}
+                  noOfLines={1}
+                  textAlign={"start"}
+                >
+                  {title}
+                </Heading>
+                <HStack spacing={7} pt={2} alignItems={"baseline"}>
+                  <HStack>
+                    <FaBed size={20} />
+                    <Text>{bed}</Text>
+                  </HStack>
+                  <HStack>
+                    <FaBath size={20} />
+                    <Text>{bath}</Text>
+                  </HStack>
+                  <HStack>
+                    <FaBorderAll size={20} />
+                    <Text>{area}</Text>
+                  </HStack>
                 </HStack>
-              </Flex>
+                <Flex
+                  justifyContent={"flex-end"}
+                  flexDirection={"column"}
+                  flex={1}
+                >
+                  <HStack justifyContent={"start"}>{children}</HStack>
+                </Flex>
+              </Stack>
+              {bookId === id ? (
+                <Badge colorScheme="green" h={5}>
+                  Booked
+                </Badge>
+              ) : (
+                ""
+              )}
             </Stack>
-          </Stack>
+          </Box>
         </Center>
         <Center>
-          {review === "true" ? (
+          <Stack direction={"row"} flex={1}>
             <Button
               w={"100%"}
               fontSize={"sm"}
               fontWeight={400}
               color="white"
               variant={"solid"}
-              bg="green.400"
+              bg="gray.200"
+              textColor={"black"}
               style={{
                 fontWeight: "bold",
               }}
+              _hover={{
+                bg: "red.400",
+                textColor: "white",
+              }}
+              onClick={() => {
+                PostDelete(id);
+                console.log(id);
+                // window.location.reload();
+              }}
             >
-              Approveed
+              Reject
             </Button>
-          ) : (
-            <Stack direction={"row"} flex={1}>
-              <Button
-                w={"100%"}
-                fontSize={"sm"}
-                fontWeight={400}
-                color="white"
-                variant={"solid"}
-                bg="gray.200"
-                textColor={"black"}
-                style={{
-                  fontWeight: "bold",
-                }}
-                _hover={{
-                  bg: "green.400",
-                  textColor: "white",
-                }}
-                onClick={() => {
-                  Approve();
-                  
-                }}
-              >
-                Approved
-              </Button>
-              <Button
-                w={"100%"}
-                fontSize={"sm"}
-                fontWeight={400}
-                color="white"
-                variant={"solid"}
-                bg="gray.200"
-                textColor={"black"}
-                style={{
-                  fontWeight: "bold",
-                }}
-                _hover={{
-                  bg: "red.400",
-                  textColor: "white",
-                }}
-                onClick={() => {
-                  PostDelete(post_id);
-                  window.location.reload();
-                }}
-              >
-                Reject
-              </Button>
-            </Stack>
-          )}
+          </Stack>
         </Center>
       </Stack>
     </Center>

@@ -18,8 +18,6 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { supabase } from "../../utils/supabaseClient";
-
 
 export default function NavBar({ id }) {
   const querystring = require("querystring");
@@ -28,19 +26,9 @@ export default function NavBar({ id }) {
 
   useEffect(() => {
     getProfile();
-  },[]);
+  }, []);
 
-  const getProfile = async () => {
-    let { data, error, status } = await supabase
-      .from("profiles")
-      .select("name")
-      .eq("user_id", u_id)
-      .single();
-
-    if (data) {
-      setName(data.name);
-    }
-  };
+  const getProfile = async () => {};
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
@@ -101,4 +89,3 @@ export default function NavBar({ id }) {
     </>
   );
 }
-

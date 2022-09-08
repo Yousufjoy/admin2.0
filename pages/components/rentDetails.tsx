@@ -38,9 +38,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { FaBath, FaBed, FaBorderAll } from "react-icons/fa";
 import { MdLocalShipping } from "react-icons/md";
-import { supabase } from "../../utils/supabaseClient";
-import Navbar from "./navbar";
 
+import Navbar from "./navbar";
 
 export default function RentDetails() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -72,50 +71,22 @@ export default function RentDetails() {
     getPosts();
   }, []);
 
-  const getBook = async () => {
-    let { data: booking_info, error } = await supabase
-      .from("booking_info")
-      .select("*")
-      .eq("book_id", post_id)
-      .single();
-    if (error) throw error;
-    if (booking_info) {
-      setBookName(booking_info.name);
-      setBookNumber(booking_info.number);
-      console.log(bookName);
-    }
-  };
-  const handleBook = async (post_id, name, number) => {
-    const { data, error } = await supabase
-      .from("booking_info")
-      .insert([{ book_id: post_id, name: name, number: number }]);
-  };
+  const getBook = async () => {};
+  const handleBook = async (post_id, name, number) => {};
   const getPosts = async () => {
-    let {
-      data: posts,
-      error,
-      status,
-    } = await supabase
-      .from("posts")
-      .select("*")
-      .eq("post_id", post_id)
-      .single();
-
-    if (error) throw error;
-
-    if (posts) {
-      setName(posts.name);
-      setEmail(posts.email);
-      setPhone(posts.number);
-      setAddress(posts.address);
-      setPrice(posts.price);
-      setLocation(posts.location);
-      setArea(posts.area);
-      setBeds(posts.beds);
-      setBaths(posts.baths);
-      setDescription(posts.description);
-      setType(posts.type);
-    }
+    // if (posts) {
+    //   setName(posts.name);
+    //   setEmail(posts.email);
+    //   setPhone(posts.number);
+    //   setAddress(posts.address);
+    //   setPrice(posts.price);
+    //   setLocation(posts.location);
+    //   setArea(posts.area);
+    //   setBeds(posts.beds);
+    //   setBaths(posts.baths);
+    //   setDescription(posts.description);
+    //   setType(posts.type);
+    // }
   };
   return (
     <>
