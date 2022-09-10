@@ -6,7 +6,6 @@ import {
   Image,
   Flex,
   VStack,
-  Button,
   Heading,
   SimpleGrid,
   StackDivider,
@@ -15,31 +14,23 @@ import {
   ListItem,
   Badge,
   HStack,
-  FormControl,
-  FormLabel,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   useDisclosure,
   Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
+  Tag,
+  TagLabel,
+  TagRightIcon,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { FaBath, FaBed, FaBorderAll } from "react-icons/fa";
+import { IoLocationSharp } from "react-icons/io5";
 import { MdLocalShipping } from "react-icons/md";
-
 import Navbar from "./navbar";
+
+const api = axios.create({
+  baseURL: `http://localhost:5001/api/post`,
+});
 
 export default function RentDetails() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -63,30 +54,30 @@ export default function RentDetails() {
   const [baths, setBaths] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState("");
-  const [bookName, setBookName] = useState("");
-  const [bookNumber, setBookNumber] = useState("");
+  const [posts, setPosts] = useState([]);
 
-  console.log(post_id);
   useEffect(() => {
     getPosts();
-  }, []);
+  });
 
-  const getBook = async () => {};
-  const handleBook = async (post_id, name, number) => {};
   const getPosts = async () => {
-    // if (posts) {
-    //   setName(posts.name);
-    //   setEmail(posts.email);
-    //   setPhone(posts.number);
-    //   setAddress(posts.address);
-    //   setPrice(posts.price);
-    //   setLocation(posts.location);
-    //   setArea(posts.area);
-    //   setBeds(posts.beds);
-    //   setBaths(posts.baths);
-    //   setDescription(posts.description);
-    //   setType(posts.type);
-    // }
+    let data = await api.get("/").then(({ data }) => data);
+    setPosts(data);
+    posts.map((posts) =>
+      posts.id === post_id
+        ? (setName(posts.name),
+          setEmail(posts.email),
+          setPhone(posts.number),
+          setAddress(posts.address),
+          setPrice(posts.price),
+          setLocation(posts.location),
+          setArea(posts.area),
+          setBeds(posts.bed),
+          setBaths(posts.bath),
+          setDescription(posts.description),
+          setType(posts.type))
+        : ""
+    );
   };
   return (
     <>
@@ -111,7 +102,13 @@ export default function RentDetails() {
             />
           </Flex>
           <Stack spacing={{ base: 6, md: 10 }}>
-            <Box as={"header"}>
+            <Stack
+              flex={1}
+              spacing={1}
+              flexDirection="column"
+              justifyContent="start"
+              alignItems="start"
+            >
               <Stack direction="row" alignItems="baseline">
                 <Text
                   fontSize="20"
@@ -124,16 +121,22 @@ export default function RentDetails() {
                   {price}
                 </Text>
               </Stack>
-              <Text fontSize="18" p={1}>
+              <Tag size={"lg"} variant="outline" colorScheme="blue">
+                <TagLabel>{location}</TagLabel>
+                <TagRightIcon boxSize="12px" as={IoLocationSharp} />
+              </Tag>
+              <Text fontSize="18" fontWeight="medium">
                 {address}
               </Text>
-              <Badge p={1} fontSize="1em">
+              <Badge fontSize="sm" colorScheme="blue" variant={"solid"}>
                 {type}
               </Badge>
               <Heading
                 fontSize={20}
                 overflow={"hidden"}
                 orientation={"horizontal"}
+                noOfLines={1}
+                textAlign={"start"}
               >
                 {name}
               </Heading>
@@ -151,7 +154,7 @@ export default function RentDetails() {
                   <Text>{area}</Text>
                 </HStack>
               </HStack>
-            </Box>
+            </Stack>
             <Stack
               spacing={{ base: 4, sm: 6 }}
               direction={"column"}
