@@ -63,7 +63,7 @@ export default function HomePage() {
     <>
       <Navbar id={undefined} />
       <Container
-        bgImage="url('https://firebasestorage.googleapis.com/v0/b/rentify-4f59b.appspot.com/o/rentify%20reloaded%2F810-2%20%5BConverted%5D.png?alt=media&token=fecd0b33-c04d-4304-b9c7-f1643408f57c')"
+        bgImage="url('https://firebasestorage.googleapis.com/v0/b/rentify-4f59b.appspot.com/o/rentify%20reloaded%2F4055286-01.png?alt=media&token=fc823e3d-893b-4df2-aa65-a0252d1fd707&fbclid=IwAR3soTqvaERtD92rKThtPXiEkSGeBOsWEszSsoLMQSusvW7ElAibgKOOCi8')"
         bgSize={"465px"}
         maxW={"full"}
         maxH={"45vh"}
